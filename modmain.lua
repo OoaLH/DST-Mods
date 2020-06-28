@@ -1,16 +1,11 @@
 local require = GLOBAL.require
-local RecipePopUp = require 'widgets/recipepopup'
 local ImageButton = require 'widgets/imagebutton'
 local Tex = require 'widgets/text'
 require 'constants'
-local RecipePopUp_Refresh_base = RecipePopUp.Refresh or function() print('error') return '' end
 local flag = false
 local index = 0
 local margin_size_x = 50
 local margin_size_y = 50
-local x = 0
-local y = 0
-local z = 0
 local TextWidget = nil
 local player = nil
 
@@ -59,8 +54,8 @@ local function PositionText(controls, newwidget, screensize, x_align, y_align)
     )
 end
 
-local function updateposition()
-    x,y,z = player.Transform:GetWorldPosition()
+local function UpdatePosition()
+    local x,y,z = player.Transform:GetWorldPosition()
     print('position')
     print(x..", "..z)    
     if TextWidget ~= nil then
@@ -90,7 +85,7 @@ local function AddPositionText()
             end
             controls.position_text_widget:Show()
             controls.position_button_widget.image:SetScale(1, 0.75)
-            controls.position_button_widget:SetOnClick(updateposition)
+            controls.position_button_widget:SetOnClick(UpdatePosition)
             controls.position_button_widget:SetText('get position')
             controls.position_button_widget:Enable()
             controls.position_button_widget:SetClickable(true)
