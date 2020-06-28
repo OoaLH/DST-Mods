@@ -1,0 +1,10 @@
+name = "Ratafia's mod"
+description = "Ratafia's mod"
+author = 'Ratafia'
+version = '0.0.1'
+forumthread = '/'
+client_only_mod = true
+dont_starve_compatible = true
+reign_of_giants_compatible = true
+dst_compatible = true
+api_version = 10
