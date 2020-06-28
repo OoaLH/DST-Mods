@@ -9,7 +9,7 @@ local margin_size_y = 50
 local TextWidget = nil
 local player = nil
 
-local function PositionText(controls, newwidget, screensize, x_align, y_align)
+local function PositionText(controls, newwidget, screensize, x_align, y_align, offset)
     local dir_vert = 0
     local dir_horiz = 0
     local anchor_vert = 0
@@ -49,9 +49,21 @@ local function PositionText(controls, newwidget, screensize, x_align, y_align)
 	local screenh = screenh_full/hudscale.y
 	newwidget:SetPosition(
 		(anchor_horiz*margin_size_x)+(dir_horiz*screenw/2)+(margin_dir_horiz*margin_size_x), 
-		(anchor_vert*margin_size_y)+(dir_vert*screenh/2)+(margin_dir_vert*margin_size_y)+10, 
+		(anchor_vert*margin_size_y)+(dir_vert*screenh/2)+(margin_dir_vert*margin_size_y)+offset, 
 		0
     )
+end
+
+local function ShowTouchStone()
+    local touchstone = GLOBAL.GetClosestInstWithTag('resurrector', player, 1000)
+    if touchstone~=nil then
+        print(touchstone)
+    end
+    local stonex, stoney, stonez = touchstone.Transform:GetWorldPosition()
+    player:FacePoint(stonex, stoney, stonez)
+    if TextWidget ~= nil then
+        TextWidget:SetString('nearest touchstone is at '..stonex..", "..stonez)
+    end 
 end
 
 local function UpdatePosition()
@@ -66,25 +78,32 @@ end
 local function AddPositionText()
     AddClassPostConstruct( "widgets/controls", function(controls)
         controls.inst:DoTaskInTime( 0, function()
-
-
             controls.position_text_widget = controls.top_root:AddChild( Tex('talkingfont',40) )
             controls.position_button_widget = controls.top_root:AddChild( ImageButton() )
+            controls.touchstone_button_widget = controls.top_root:AddChild( ImageButton() )
             local screensize = {GLOBAL.TheSim:GetScreenSize()}
-            PositionText(controls, controls.position_text_widget, screensize, 'center', 'top')
-            PositionText(controls, controls.position_button_widget, screensize, 'left', 'top')
+            PositionText(controls, controls.position_text_widget, screensize, 'center', 'top', 15)
+            PositionText(controls, controls.position_button_widget, screensize, 'left', 'top', 15)
+            PositionText(controls, controls.touchstone_button_widget, screensize, 'left', 'bottom', -5)
             local OnUpdate_base = controls.OnUpdate
             controls.OnUpdate = function(self, dt)
                 OnUpdate_base(self, dt)
                 local curscreensize = {GLOBAL.TheSim:GetScreenSize()}
                 if curscreensize[1] ~= screensize[1] or curscreensize[2] ~= screensize[2] then
-                    PositionText(controls, controls.position_text_widget, curscreensize, 'center', 'top')
-                    PositionText(controls, controls.position_button_widget, curscreensize, 'left', 'top')
+                    PositionText(controls, controls.position_text_widget, curscreensize, 'center', 'top', 15)
+                    PositionText(controls, controls.position_button_widget, curscreensize, 'left', 'top', 15)
+                    PositionText(controls, controls.touchstone_button_widget, screensize, 'left', 'bottom', -5)
                     screensize = curscreensize
                 end
             end
             controls.position_text_widget:Show()
-            controls.position_button_widget.image:SetScale(1, 0.75)
+            controls.touchstone_button_widget.image:SetScale(1, 0.5)
+            controls.touchstone_button_widget:SetText('find touchstone')
+            controls.touchstone_button_widget:SetOnClick(ShowTouchStone)
+            controls.touchstone_button_widget:Enable()
+            controls.touchstone_button_widget:SetClickable(true)
+            controls.touchstone_button_widget:Show()
+            controls.position_button_widget.image:SetScale(0.75, 0.5)
             controls.position_button_widget:SetOnClick(UpdatePosition)
             controls.position_button_widget:SetText('get position')
             controls.position_button_widget:Enable()
@@ -104,21 +123,7 @@ AddPlayerPostInit(function(inst)
     end)
 end)
 
-    
 [[
-local function CreateButton(name, x, y, axisX, axisY, parent, onClickFunc)
-    -- body
-    local newButton = parent:AddChild(ImageButton())
-    newButton.image:SetScale(x, y)
-    newButton:SetPosition(axisX, axisY)
-    newButton:SetOnClick(onClickFunc)
-    newButton:Show()
-    newButton:SetText(name)
-    newButton:Enable()
-    newButton:SetClickable(true)
-    return newButton
-end
-
 local function ButtonExists(buttonPointer)
     if buttonPointer==nil or buttonPointer.parent==nil then
         return false
