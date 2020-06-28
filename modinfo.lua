@@ -1,7 +1,7 @@
 name = "Ratafia's mod"
 description = "Ratafia's mod"
 author = 'Ratafia'
-version = '0.0.1'
+version = '0.0.2'
 forumthread = '/'
 client_only_mod = true
 dont_starve_compatible = true
