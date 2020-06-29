@@ -2,10 +2,12 @@ local require = GLOBAL.require
 local ImageButton = require 'widgets/imagebutton'
 local Tex = require 'widgets/text'
 require 'constants'
-local flag = false
-local index = 0
 local margin_size_x = 50
 local margin_size_y = 50
+local nearestPlayer = nil
+local x = 0
+local y = 0
+local z = 0
 local TextWidget = nil
 local player = nil
 
@@ -54,7 +56,20 @@ local function PositionText(controls, newwidget, screensize, x_align, y_align, o
     )
 end
 
-local function ShowTouchStone()
+local function updateposition()
+    x,y,z = player.Transform:GetWorldPosition()
+    local nearby_player = GLOBAL.GetClosestInstWithTag('player', player, 1000)
+    if nearby_player~=nil then
+        print(nearby_player)
+    end
+    print('position')
+    print(x..", "..z)
+    if TextWidget ~= nil then
+        TextWidget:SetString(x..", "..z)
+    end   
+end
+
+local function showtouchstone()
     local touchstone = GLOBAL.GetClosestInstWithTag('resurrector', player, 1000)
     if touchstone~=nil then
         print(touchstone)
@@ -66,18 +81,11 @@ local function ShowTouchStone()
     end 
 end
 
-local function UpdatePosition()
-    local x,y,z = player.Transform:GetWorldPosition()
-    print('position')
-    print(x..", "..z)    
-    if TextWidget ~= nil then
-        TextWidget:SetString(x..", "..z)
-    end   
-end
-
 local function AddPositionText()
     AddClassPostConstruct( "widgets/controls", function(controls)
         controls.inst:DoTaskInTime( 0, function()
+
+
             controls.position_text_widget = controls.top_root:AddChild( Tex('talkingfont',40) )
             controls.position_button_widget = controls.top_root:AddChild( ImageButton() )
             controls.touchstone_button_widget = controls.top_root:AddChild( ImageButton() )
@@ -99,12 +107,12 @@ local function AddPositionText()
             controls.position_text_widget:Show()
             controls.touchstone_button_widget.image:SetScale(1, 0.5)
             controls.touchstone_button_widget:SetText('find touchstone')
-            controls.touchstone_button_widget:SetOnClick(ShowTouchStone)
+            controls.touchstone_button_widget:SetOnClick(showtouchstone)
             controls.touchstone_button_widget:Enable()
             controls.touchstone_button_widget:SetClickable(true)
             controls.touchstone_button_widget:Show()
             controls.position_button_widget.image:SetScale(0.75, 0.5)
-            controls.position_button_widget:SetOnClick(UpdatePosition)
+            controls.position_button_widget:SetOnClick(updateposition)
             controls.position_button_widget:SetText('get position')
             controls.position_button_widget:Enable()
             controls.position_button_widget:SetClickable(true)
@@ -122,22 +130,3 @@ AddPlayerPostInit(function(inst)
         player = GLOBAL.ThePlayer
     end)
 end)
-
-[[
-local function ButtonExists(buttonPointer)
-    if buttonPointer==nil or buttonPointer.parent==nil then
-        return false
-    else
-        return true
-    end
-end
-
-local function CreateText(name, parent)
-    local tex = parent:AddChild(Tex('talkingfont',40))
-    tex:SetPosition(320, -250, 0)
-    tex:SetString(name)
-    tex:Hide()
-    return tex
-end
-]]
-
