@@ -1,6 +1,6 @@
 # DST Mods
-To use the mod, put the mod folder under **common/Don't Starve Together/mods/**. In macOS it would be **steamapps/common/Don't Starve Together/dontstarve_steam/Contents/mods/**.
-
+To use the mod, put the mod folder under **common/Don't Starve Together/mods/**. In macOS it would be **steamapps/common/Don't Starve Together/dontstarve_steam/Contents/mods/**.  
+GetPosition&FindTouchstone mod can also be found here: https://steamcommunity.com/sharedfiles/filedetails/?id=2146435243  
 Icons and other features wil be updated.
 ## Get Current Position
 The minimalist mod to help novices find each other in the *don't starve together* world using a *get position* button to get current coordinates without further map mods.
