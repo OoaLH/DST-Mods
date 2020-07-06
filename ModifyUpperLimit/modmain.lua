@@ -37,7 +37,7 @@ TUNING.CALORIES_SUPERHUGE = calories_per_day*2 -- crockpot foods?
 if change_all==false then 
     for i = 1, #characters do
         table.insert( TUNING['GAMEMODE_STARTING_ITEMS']['DEFAULT'][characters[i]], "torch" )
-        table.insert( TUNING['GAMEMODE_STARTING_ITEMS']['DEFAULT'][characters[i]], "bonfire" )
+        table.insert( TUNING['GAMEMODE_STARTING_ITEMS']['DEFAULT'][characters[i]], "earmuffshat" )
         if character_status[i]~=false then
             TUNING[characters[i]..'_HEALTH'] = character_status[i]
             TUNING[characters[i]..'_SANITY'] = character_status[i]
@@ -47,7 +47,7 @@ if change_all==false then
 else
     for i = 1, #characters do
         table.insert( TUNING['GAMEMODE_STARTING_ITEMS']['DEFAULT'][characters[i]], "torch" )
-        table.insert( TUNING['GAMEMODE_STARTING_ITEMS']['DEFAULT'][characters[i]], "bonfire" )
+        table.insert( TUNING['GAMEMODE_STARTING_ITEMS']['DEFAULT'][characters[i]], "earmuffshat" )
         TUNING[characters[i]..'_HEALTH'] = change_all
         TUNING[characters[i]..'_SANITY'] = change_all
         TUNING[characters[i]..'_HUNGER'] = change_all
