@@ -2,11 +2,12 @@ local require = GLOBAL.require
 require 'constants'
 require 'tuning'
 local change_all = GetModConfigData('CHANGE ALL')
-local charactors = {"WILSON", "WILLOW", "WENDY", "WOLFGANG", "WICKERBOTTOM", "WES", "WAXWELL", "WOODIE", "WATHGRITHR", "WEBBER", "WINONA", "WORTOX", "WORMWOOD", "WARLY", "WURT", "WALTER"}
-local charactor_status = {}
-for i = 1, #charactors do
-    charactor_status[i] = GetModConfigData(charactors[i])
+local characters = {"WILSON", "WILLOW", "WENDY", "WOLFGANG", "WICKERBOTTOM", "WES", "WAXWELL", "WOODIE", "WATHGRITHR", "WEBBER", "WINONA", "WORTOX", "WORMWOOD", "WARLY", "WURT", "WALTER"}
+local character_status = {}
+for i = 1, #characters do
+    character_status[i] = GetModConfigData(characters[i])
 end
+local calories_per_day = 150
 TUNING.HEALING_TINY = 30
 TUNING.HEALING_SMALL = 40
 TUNING.HEALING_MEDSMALL = 50
@@ -25,19 +26,30 @@ TUNING.SANITY_BECOME_SANE_THRESH = 35/400
 TUNING.SANITY_BECOME_INSANE_THRESH = 30/400
 TUNING.SANITY_BECOME_ENLIGHTENED_THRESH = 170/400
 TUNING.SANITY_LOSE_ENLIGHTENMENT_THRESH = 165/400
-TUNING.GAMEMODE_STARTING_ITEMS.DEFAULT.WEBBER = {"spidereggsack", "monstermeat", "monstermeat", "torch"}
+TUNING.CALORIES_TINY = calories_per_day/8 -- berries
+TUNING.CALORIES_SMALL = calories_per_day/6 -- veggies
+TUNING.CALORIES_MEDSMALL = calories_per_day/4
+TUNING.CALORIES_MED = calories_per_day/3 -- meat
+TUNING.CALORIES_LARGE = calories_per_day/2 -- cooked meat
+TUNING.CALORIES_HUGE = calories_per_day -- crockpot foods?
+TUNING.CALORIES_SUPERHUGE = calories_per_day*2 -- crockpot foods?
+--TUNING.GAMEMODE_STARTING_ITEMS.DEFAULT.WEBBER = {"spidereggsack", "monstermeat", "monstermeat", "torch"}
 if change_all==false then 
-    for i = 1, #charactors do
-        if charactor_status[i]~=false then
-            TUNING[charactors[i]..'_HEALTH'] = charactor_status[i]
-            TUNING[charactors[i]..'_SANITY'] = charactor_status[i]
-            TUNING[charactors[i]..'_HUNGER'] = charactor_status[i]
+    for i = 1, #characters do
+        table.insert( TUNING['GAMEMODE_STARTING_ITEMS']['DEFAULT'][characters[i]], "torch" )
+        table.insert( TUNING['GAMEMODE_STARTING_ITEMS']['DEFAULT'][characters[i]], "bonfire" )
+        if character_status[i]~=false then
+            TUNING[characters[i]..'_HEALTH'] = character_status[i]
+            TUNING[characters[i]..'_SANITY'] = character_status[i]
+            TUNING[characters[i]..'_HUNGER'] = character_status[i]
         end
     end
 else
-    for i = 1, #charactors do
-        TUNING[charactors[i]..'_HEALTH'] = change_all
-        TUNING[charactors[i]..'_SANITY'] = change_all
-        TUNING[charactors[i]..'_HUNGER'] = change_all
+    for i = 1, #characters do
+        table.insert( TUNING['GAMEMODE_STARTING_ITEMS']['DEFAULT'][characters[i]], "torch" )
+        table.insert( TUNING['GAMEMODE_STARTING_ITEMS']['DEFAULT'][characters[i]], "bonfire" )
+        TUNING[characters[i]..'_HEALTH'] = change_all
+        TUNING[characters[i]..'_SANITY'] = change_all
+        TUNING[characters[i]..'_HUNGER'] = change_all
     end
 end
