@@ -1,5 +1,5 @@
 name = "Modify Upper Limit"
-description = "CHANGE ALL will change the value for all charactors and ignore other configurations. Keep CHANGE ALL at Off to configure specific charactors. Three upper limits are changed together. WX78 is not supported currently."
+description = "CHANGE ALL will change the value for all characters and ignore other configurations. Keep CHANGE ALL at Off to configure specific characters. Three upper limits are changed together. WX78 is not supported currently."
 author = 'Ratafia'
 version = '0.0.1'
 forumthread = '/'
