@@ -4,7 +4,7 @@ To use the mod, subscribe at the links below. If you can't get access to steam c
 GetPosition&FindTouchstone: https://steamcommunity.com/sharedfiles/filedetails/?id=2146435243  
 Modify Upper Limit: https://steamcommunity.com/sharedfiles/filedetails/?id=2156669411  
 
-Icons and other features wil be updated.  
+Icons and other features will be updated.  
 ## Get Current Position
 The minimalist mod to help novices find each other in the *don't starve together* world using a *get position* button to get current coordinates without further map mods.
 
