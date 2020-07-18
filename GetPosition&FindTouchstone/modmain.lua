@@ -73,10 +73,16 @@ local function showtouchstone()
     local touchstone = GLOBAL.GetClosestInstWithTag('resurrector', player, 1000)
     if touchstone~=nil then
         print(touchstone)
-        if GLOBAL.TheNet:GetIsMasterSimulation() then
-            touchstone.AnimState:PlayAnimation("repair")
+        if touchstone:HasTag('multiplayer_portal')==false and touchstone:HasTag('structure')==false and GLOBAL.TheNet:GetIsMasterSimulation() and player:CanUseTouchStone(touchstone)==false then
+            print(' is touchstone')
+            touchstone.AnimState:PlayAnimation("activate")
+            touchstone.AnimState:PushAnimation("idle_activate", false)
+            touchstone.AnimState:SetLayer(GLOBAL.LAYER_WORLD)
+            touchstone.AnimState:SetSortOrder(0)
+            touchstone.Physics:CollidesWith(GLOBAL.COLLISION.CHARACTERS)
+            touchstone.SoundEmitter:PlaySound("dontstarve/common/resurrectionstone_activate")
+            touchstone._enablelights:set(true)
         end
-        
         local stonex, stoney, stonez = touchstone.Transform:GetWorldPosition()
         player:FacePoint(stonex, stoney, stonez)
         if TextWidget ~= nil then
