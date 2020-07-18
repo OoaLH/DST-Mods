@@ -73,12 +73,17 @@ local function showtouchstone()
     local touchstone = GLOBAL.GetClosestInstWithTag('resurrector', player, 1000)
     if touchstone~=nil then
         print(touchstone)
+        if GLOBAL.TheNet:GetIsMasterSimulation() then
+            touchstone.AnimState:PlayAnimation("repair")
+        end
+        
+        local stonex, stoney, stonez = touchstone.Transform:GetWorldPosition()
+        player:FacePoint(stonex, stoney, stonez)
+        if TextWidget ~= nil then
+            TextWidget:SetString('nearest touchstone is at '..stonex..", "..stonez)
+        end
     end
-    local stonex, stoney, stonez = touchstone.Transform:GetWorldPosition()
-    player:FacePoint(stonex, stoney, stonez)
-    if TextWidget ~= nil then
-        TextWidget:SetString('nearest touchstone is at '..stonex..", "..stonez)
-    end 
+     
 end
 
 local function AddPositionText()
