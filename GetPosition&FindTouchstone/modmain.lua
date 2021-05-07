@@ -77,7 +77,7 @@ local function showtouchstone()
     if touchstone~=nil then
         print(touchstone)
         if touchstone:HasTag('structure')==false and GLOBAL.TheNet:GetIsMasterSimulation() and player:CanUseTouchStone(touchstone)==false then
-            print(' is touchstone')
+            print('touch stone will be activated')
             touchstone.AnimState:PlayAnimation("activate")
             touchstone.AnimState:PushAnimation("idle_activate", false)
             touchstone.AnimState:SetLayer(GLOBAL.LAYER_WORLD)
@@ -93,7 +93,7 @@ local function showtouchstone()
         end
         player.components.locomotor:GoToPoint(Point(stonex, stoney, stonez), nil, true)
     end
-     
+    
 end
 
 local function AddPositionText()
