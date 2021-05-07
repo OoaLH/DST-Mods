@@ -57,7 +57,7 @@ local function PositionText(controls, newwidget, screensize, x_align, y_align, o
 end
 
 local function updateposition()
-    x,y,z = player.Transform:GetWorldPosition()
+    x, y, z = player.Transform:GetWorldPosition()
     local nearby_player = GLOBAL.GetClosestInstWithTag('player', player, 1000)
     if nearby_player~=nil then
         print(nearby_player)
@@ -70,10 +70,13 @@ local function updateposition()
 end
 
 local function showtouchstone()
-    local touchstone = GLOBAL.GetClosestInstWithTag('resurrector', player, 1000)
+    local x, y, z = player.Transform:GetWorldPosition()
+    local ents = GLOBAL.TheSim:FindEntities(x, y, z, 10000, {'resurrector'}, {'multiplayer_portal'})
+    local touchstone = ents[1] or ents[2]
+    --local portal = GLOBAL.GetClosestInstWithTag('multiplayer_portal', player, 10000)
     if touchstone~=nil then
         print(touchstone)
-        if touchstone:HasTag('multiplayer_portal')==false and touchstone:HasTag('structure')==false and GLOBAL.TheNet:GetIsMasterSimulation() and player:CanUseTouchStone(touchstone)==false then
+        if touchstone:HasTag('structure')==false and GLOBAL.TheNet:GetIsMasterSimulation() and player:CanUseTouchStone(touchstone)==false then
             print(' is touchstone')
             touchstone.AnimState:PlayAnimation("activate")
             touchstone.AnimState:PushAnimation("idle_activate", false)
@@ -84,10 +87,11 @@ local function showtouchstone()
             touchstone._enablelights:set(true)
         end
         local stonex, stoney, stonez = touchstone.Transform:GetWorldPosition()
-        player:FacePoint(stonex, stoney, stonez)
+        --player:FacePoint(stonex, stoney, stonez)
         if TextWidget ~= nil then
             TextWidget:SetString('nearest touchstone is at '..stonex..", "..stonez)
         end
+        player.components.locomotor:GoToPoint(Point(stonex, stoney, stonez), nil, true)
     end
      
 end
@@ -95,8 +99,6 @@ end
 local function AddPositionText()
     AddClassPostConstruct( "widgets/controls", function(controls)
         controls.inst:DoTaskInTime( 0, function()
-
-
             controls.position_text_widget = controls.top_root:AddChild( Tex('talkingfont',40) )
             controls.position_button_widget = controls.top_root:AddChild( ImageButton() )
             controls.touchstone_button_widget = controls.top_root:AddChild( ImageButton() )
