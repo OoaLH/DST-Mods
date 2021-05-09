@@ -1,7 +1,7 @@
-name = "Ratafia's mod"
-description = "The minimalist mod to help novices find each other in the don't starve together world using a get position button to get current coordinates without further map mods. find touchstone button returns the coordinates of the nearest touchstone and the character will go towards it."
+name = "Ratafia's Mod to Find Things"
+description = "The minimalist mod to help novices find creatures, structures or tools. Click find button, choose an option, and you will automatically go towards it."
 author = 'Ratafia'
-version = '0.0.6'
+version = '0.1.0'
 forumthread = '/'
 client_only_mod = true
 dont_starve_compatible = true

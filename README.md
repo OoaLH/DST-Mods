@@ -6,9 +6,7 @@ Modify Upper Limit: https://steamcommunity.com/sharedfiles/filedetails/?id=21566
 
 Icons and other features will be updated.  
 ## Get Current Position
-The minimalist mod to help novices find each other in the *don't starve together* world using a *get position* button to get current coordinates without further map mods.
-
-*find touchstone* button returns the coordinates of the nearest touchstone and the character will go towards it. Server players can recover the used touchstone.
+The minimalist mod to help novices find creatures, structures or tools. Click *find* button, choose an option, and you will automatically go towards it.
 
 ## Modify Upper Limit
 Configure characters' upper limits of health, hunger, and sanity. CHANGE ALL will change the value for all characters and ignore other configurations. Keep CHANGE ALL at Off to configure specific characters. Three upper limits are changed together. WX78 is not supported currently.  
