@@ -71,10 +71,15 @@ local function ShowTouchStone()
     local x, y, z = player.Transform:GetWorldPosition()
     local ents = GLOBAL.TheSim:FindEntities(x, y, z, 10000, {'resurrector'}, {'multiplayer_portal'})
     local touchstone = ents[1] or ents[2]
-    if touchstone~=nil then
+    if touchstone ~= nil then
         print(touchstone)
         if touchstone:HasTag('structure')==false and GLOBAL.TheNet:GetIsMasterSimulation() and player:CanUseTouchStone(touchstone)==false then
             print('touch stone will be activated')
+            if player.components.touchstonetracker ~= nil then
+                player.components.touchstonetracker.used = {}
+            elseif player.player_classified ~= nil then
+                player.player_classified:SetUsedTouchStones({})
+            end
             touchstone.AnimState:PlayAnimation("activate")
             touchstone.AnimState:PushAnimation("idle_activate", false)
             touchstone.AnimState:SetLayer(GLOBAL.LAYER_WORLD)
