@@ -4,9 +4,6 @@ require 'constants'
 require 'tuning'
 local ImageButton = require 'widgets/imagebutton'
 
-local TheNet = GLOBAL.TheNet
-local IsServer = TheNet:GetIsServer()
-local player = nil
 local margin_size_x = 50
 local margin_size_y = 50
 
@@ -56,17 +53,20 @@ local function PositionText(controls, newWidget, screensize, x_align, y_align, x
 end
 
 local function RetargetFn(inst)
-    return player.components.combat.target, true
+    if inst.components.follower.leader == nil then
+        return nil, true
+    end
+    return inst.components.follower.leader.components.combat.target, true
 end
 
-function GetClosestPet()
+function GetClosestPet(player)
     local x, y, z = player.Transform:GetWorldPosition()
     local ents = GLOBAL.TheSim:FindEntities(x, y, z, 100, {}, {}, {'rabbit', 'dragonfly', 'deerclops', 'bishop', 'spider', 'hound', 'deergemresistance', 'knight', 'rook', 'tallbird', 'frog', 'pig', 'penguine', 'beefalo', 'walrus', 'monkey', 'bearger', 'moose', 'snake', 'deer', 'lavae'})
     return ents[1] ~= player and ents[1] or ents[2]
 end
 
-local function Petify()
-    local inst = GetClosestPet()
+local function Petify(player)
+    local inst = GetClosestPet(player)
     print(inst)
     if inst ~= nil and (not inst:HasTag('player')) and (inst.components.follower == nil or inst.components.follower.leader == nil) then
         if inst:HasTag("hostile") then
@@ -107,11 +107,5 @@ local function AddPetButton()
 end
 
 AddPetButton()
-
-AddPlayerPostInit(function(inst)
-    inst:DoTaskInTime(0, function()
-        player = GLOBAL.ThePlayer
-    end)
-end)
 
 AddModRPCHandler("petify", "Petify", Petify)
