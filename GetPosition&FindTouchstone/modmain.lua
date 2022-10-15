@@ -107,7 +107,7 @@ local function FindTag(tag)
     end
     print('finding '..tag)
     local ent = GLOBAL.GetClosestInstWithTag(tab, player, 10000)
-    if ent~=nil then
+    if ent ~= nil then
         local entx, enty, entz = ent.Transform:GetWorldPosition()
         if TextWidget ~= nil then
             TextWidget:SetString('nearest '..tag..' is at '..entx..", "..entz)
