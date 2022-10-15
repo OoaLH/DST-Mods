@@ -1,7 +1,7 @@
 name = "Petify"
 description = "Make the nearest creature your pet by single click."
 author = 'Ratafia'
-version = '0.0.2'
+version = '0.0.3'
 forumthread = '/'
 all_clients_require_mod = true
 dont_starve_compatible = true

@@ -86,9 +86,9 @@ local function Petify()
     end
 end
 
-local function ClickEvent() {
+local function ClickEvent()
     SendModRPCToServer(GetModRPC("petify", "Petify"))
-}
+end
 
 local function AddPetButton()
     AddClassPostConstruct("widgets/controls", function(controls)
