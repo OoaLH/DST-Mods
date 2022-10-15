@@ -4,6 +4,8 @@ require 'constants'
 require 'tuning'
 local ImageButton = require 'widgets/imagebutton'
 
+local TheNet = GLOBAL.TheNet
+local IsServer = TheNet:GetIsServer()
 local player = nil
 local margin_size_x = 50
 local margin_size_y = 50
@@ -63,7 +65,7 @@ function GetClosestPet()
     return ents[1] ~= player and ents[1] or ents[2]
 end
 
-local function petify()
+local function Petify()
     local inst = GetClosestPet()
     print(inst)
     if inst ~= nil and (not inst:HasTag('player')) and (inst.components.follower == nil or inst.components.follower.leader == nil) then
@@ -84,6 +86,10 @@ local function petify()
     end
 end
 
+local function ClickEvent() {
+    SendModRPCToServer(GetModRPC("petify", "Petify"))
+}
+
 local function AddPetButton()
     AddClassPostConstruct("widgets/controls", function(controls)
         controls.inst:DoTaskInTime(0, function()
@@ -91,7 +97,7 @@ local function AddPetButton()
             controls.position_button_widget = controls.top_root:AddChild(ImageButton())
             PositionText(controls, controls.position_button_widget, screensize, 'left', 'top', 0, -5)
             controls.position_button_widget.image:SetScale(0.75, 0.5)
-            controls.position_button_widget:SetOnClick(petify)
+            controls.position_button_widget:SetOnClick(ClickEvent)
             controls.position_button_widget:SetText('find a pet')
             controls.position_button_widget:Enable()
             controls.position_button_widget:SetClickable(true)
@@ -107,3 +113,5 @@ AddPlayerPostInit(function(inst)
         player = GLOBAL.ThePlayer
     end)
 end)
+
+AddModRPCHandler("petify", "Petify", Petify)
