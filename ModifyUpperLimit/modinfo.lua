@@ -1,13 +1,16 @@
 name = "Modify Upper Limit"
 description = "CHANGE ALL will change the value for all characters and ignore other configurations. Keep CHANGE ALL at Off to configure specific characters. Three upper limits are changed together. WX78 is not supported currently."
 author = 'Ratafia'
-version = '0.0.2'
+version = '0.0.4'
 forumthread = '/'
 server_only_mod = true
 dont_starve_compatible = true
 reign_of_giants_compatible = true
 dst_compatible = true
 api_version = 10
+
+icon_atlas = "speedometer.xml"
+icon = "speedometer.tex"
 
 configuration_options =
 {
