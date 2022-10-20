@@ -3,11 +3,12 @@ local ImageButton = require 'widgets/imagebutton'
 local Text = require 'widgets/text'
 local Menu = require 'widgets/menu'
 require 'constants'
+
 local margin_size_x = 50
 local margin_size_y = 50
 local TextWidget = nil
-local player = nil
-local tabsToFind = {'beefalo', 'bishop', 'boat', 'dragonfly', 'eyebone', 'hound', 'pigking', 'spider', 'tallbird', 'teleporter'}
+local serverPlayer = nil
+local tabsToFind = {'myself', 'touchstone', 'beefalo', 'bishop', 'boat', 'dragonfly', 'eyebone', 'hound', 'pigking', 'spider', 'tallbird', 'teleporter'}
 
 local function PositionText(controls, newWidget, screensize, x_align, y_align, x_offset, y_offset)
     local dir_vert = 0
@@ -54,49 +55,81 @@ local function PositionText(controls, newWidget, screensize, x_align, y_align, x
     )
 end
 
-local function UpdatePosition()
+local function UpdatePosition(player)
     local x, y, z = player.Transform:GetWorldPosition()
-    local nearby_player = GLOBAL.GetClosestInstWithTag('player', player, 1000)
-    if nearby_player~=nil then
-        print(nearby_player)
-    end
-    print('position')
-    print(x..", "..z)
     if TextWidget ~= nil then
         TextWidget:SetString(x..", "..z)
-    end   
+    end
 end
 
-local function ShowTouchStone()
+local function ActivateTouchStone(player, touchstone)
+    print('touch stone will be activated')
+    if player.components.touchstonetracker ~= nil then
+        player.components.touchstonetracker.used = {}
+    elseif player.player_classified ~= nil then
+        player.player_classified:SetUsedTouchStones({})
+    end
+    touchstone.AnimState:PlayAnimation("activate")
+    touchstone.AnimState:PushAnimation("idle_activate", false)
+    touchstone.AnimState:SetLayer(GLOBAL.LAYER_WORLD)
+    touchstone.AnimState:SetSortOrder(0)
+    touchstone.Physics:CollidesWith(GLOBAL.COLLISION.CHARACTERS)
+    touchstone.SoundEmitter:PlaySound("dontstarve/common/resurrectionstone_activate")
+    touchstone._enablelights:set(true)
+end
+
+AddModRPCHandler("FindRPC", "ActivateTouchStone", ActivateTouchStone)
+
+local function ShowTouchStone(player)
     local x, y, z = player.Transform:GetWorldPosition()
     local ents = GLOBAL.TheSim:FindEntities(x, y, z, 10000, {'resurrector'}, {'multiplayer_portal'})
     local touchstone = ents[1] or ents[2]
     if touchstone ~= nil then
         print(touchstone)
-        if touchstone:HasTag('structure')==false and GLOBAL.TheNet:GetIsMasterSimulation() and player:CanUseTouchStone(touchstone)==false then
-            print('touch stone will be activated')
-            if player.components.touchstonetracker ~= nil then
-                player.components.touchstonetracker.used = {}
-            elseif player.player_classified ~= nil then
-                player.player_classified:SetUsedTouchStones({})
-            end
-            touchstone.AnimState:PlayAnimation("activate")
-            touchstone.AnimState:PushAnimation("idle_activate", false)
-            touchstone.AnimState:SetLayer(GLOBAL.LAYER_WORLD)
-            touchstone.AnimState:SetSortOrder(0)
-            touchstone.Physics:CollidesWith(GLOBAL.COLLISION.CHARACTERS)
-            touchstone.SoundEmitter:PlaySound("dontstarve/common/resurrectionstone_activate")
-            touchstone._enablelights:set(true)
+        if touchstone:HasTag('structure') == false and player:CanUseTouchStone(touchstone) == false then
+            SendModRPCToServer(GetModRPC("FindRPC", "ActivateTouchStone"), touchstone)
         end
         local stonex, stoney, stonez = touchstone.Transform:GetWorldPosition()
         if TextWidget ~= nil then
             TextWidget:SetString('nearest touchstone is at '..stonex..", "..stonez)
         end
         player.components.locomotor:GoToPoint(Point(stonex, stoney, stonez), nil, true)
+    else
+        SendModRPCToServer(GetModRPC("FindRPC", "RemoteFindTag"), 'resurrector', 'touchstone')
     end
 end
 
-local function FindTag(tag)
+local function LocalGoToTag(tag, entx, enty, entz)
+    if TextWidget ~= nil then
+        TextWidget:SetString('nearest '..tag..' is at '..entx..", "..entz)
+    end
+    serverPlayer.components.locomotor:GoToPoint(Point(entx, enty, entz), nil, true)
+end
+
+AddClientModRPCHandler("FindRPC", "LocalGoToTag", LocalGoToTag)
+
+local function RemoteFindTag(player, tab, tag)
+    local ent = GLOBAL.GetClosestInstWithTag(tab, player, 10000)
+    if ent ~= nil then
+        local entx, enty, entz = ent.Transform:GetWorldPosition()
+        print(player.userid)
+        SendModRPCToClient(GetClientModRPC("FindRPC", "LocalGoToTag"), player.userid, tag, entx, enty, entz)
+    end
+end
+
+AddModRPCHandler("FindRPC", "RemoteFindTag", RemoteFindTag)
+
+local function FindTag(player, tag)
+    if tag == 'myself' then
+        print('finding myself')
+        UpdatePosition(player)
+        return
+    end
+    if tag == 'touchstone' then
+        print('finding touchstone')
+        ShowTouchStone(player)
+        return
+    end
     local tab = ''
     if tag == 'pigking' then
         tab = 'king'
@@ -106,37 +139,25 @@ local function FindTag(tag)
         tab = tag
     end
     print('finding '..tag)
-    local ent = GLOBAL.GetClosestInstWithTag(tab, player, 10000)
-    if ent ~= nil then
-        local entx, enty, entz = ent.Transform:GetWorldPosition()
-        if TextWidget ~= nil then
-            TextWidget:SetString('nearest '..tag..' is at '..entx..", "..entz)
-        end
-        player.components.locomotor:GoToPoint(Point(entx, enty, entz), nil, true)
-    end
+    -- local ent = GLOBAL.GetClosestInstWithTag(tab, player, 10000)
+    -- if ent ~= nil then
+    --     local entx, enty, entz = ent.Transform:GetWorldPosition()
+    --     if TextWidget ~= nil then
+    --         TextWidget:SetString('nearest '..tag..' is at '..entx..", "..entz)
+    --     end
+    --     player.components.locomotor:GoToPoint(Point(entx, enty, entz), nil, true)
+    -- else
+        SendModRPCToServer(GetModRPC("FindRPC", "RemoteFindTag"), tab, tag)
+    -- end
 end
 
 local function AddFindButton()
     AddClassPostConstruct("widgets/controls", function(controls)
         controls.inst:DoTaskInTime(0, function()
             local menu = Menu(nil, -40, false, 'tabs')
-            menu:AddItem('myself', function()
-                print('finding myself')
-                UpdatePosition()
-                menu:Hide()
-                controls.menu_showed = false
-                controls.find_button_widget:SetText('find')
-            end)
-            menu:AddItem('touchstone', function()
-                print('finding touchstone')
-                ShowTouchStone()
-                menu:Hide()
-                controls.menu_showed = false
-                controls.find_button_widget:SetText('find')
-            end)
             for i = 1, #tabsToFind do
                 menu:AddItem(tabsToFind[i], function()
-                    FindTag(tabsToFind[i])
+                    FindTag(serverPlayer, tabsToFind[i])
                     menu:Hide()
                     controls.menu_showed = false
                     controls.find_button_widget:SetText('find')
@@ -191,6 +212,6 @@ AddFindButton()
 
 AddPlayerPostInit(function(inst)
     inst:DoTaskInTime(0, function()
-        player = GLOBAL.ThePlayer
+        serverPlayer = GLOBAL.ThePlayer
     end)
 end)
