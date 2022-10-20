@@ -1,12 +1,12 @@
 # DST Mods
 To use the mod, subscribe at the links below. If you can't get access to steam community, put the mod folder under **common/Don't Starve Together/mods/**. On macOS it would be **steamapps/common/Don't Starve Together/dontstarve_steam/Contents/mods/**.  
 
-GetPosition&FindTouchstone: https://steamcommunity.com/sharedfiles/filedetails/?id=2146435243  
+Ratafia's Mod to Find Things: https://steamcommunity.com/sharedfiles/filedetails/?id=2146435243  
 Modify Upper Limit: https://steamcommunity.com/sharedfiles/filedetails/?id=2156669411  
 Petify: https://steamcommunity.com/sharedfiles/filedetails/?id=2875403467
 
 Icons and other features will be updated.  
-## Get Current Position
+## Ratafia's Mod to Find Things
 The minimalist mod to help novices find creatures, structures or tools. Click *find* button, choose an option, and you will automatically go towards it. The touchstone will be reactivated if you use the mod to find it.
 
 ## Modify Upper Limit
