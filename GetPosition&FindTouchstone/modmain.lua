@@ -139,16 +139,16 @@ local function FindTag(player, tag)
         tab = tag
     end
     print('finding '..tag)
-    -- local ent = GLOBAL.GetClosestInstWithTag(tab, player, 10000)
-    -- if ent ~= nil then
-    --     local entx, enty, entz = ent.Transform:GetWorldPosition()
-    --     if TextWidget ~= nil then
-    --         TextWidget:SetString('nearest '..tag..' is at '..entx..", "..entz)
-    --     end
-    --     player.components.locomotor:GoToPoint(Point(entx, enty, entz), nil, true)
-    -- else
+    local ent = GLOBAL.GetClosestInstWithTag(tab, player, 10000)
+    if ent ~= nil then
+        local entx, enty, entz = ent.Transform:GetWorldPosition()
+        if TextWidget ~= nil then
+            TextWidget:SetString('nearest '..tag..' is at '..entx..", "..entz)
+        end
+        player.components.locomotor:GoToPoint(Point(entx, enty, entz), nil, true)
+    else
         SendModRPCToServer(GetModRPC("FindRPC", "RemoteFindTag"), tab, tag)
-    -- end
+    end
 end
 
 local function AddFindButton()

@@ -1,7 +1,7 @@
 name = "Ratafia's Mod to Find Things"
 description = "The minimalist mod to help novices find creatures, structures or tools. Click find button, choose an option, and you will automatically go towards it."
 author = 'Ratafia'
-version = '0.1.4'
+version = '0.1.5'
 forumthread = '/'
 client_only_mod = true
 dont_starve_compatible = true
